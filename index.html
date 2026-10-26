@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jev as a Reranker — Leaderboard</title>
+  <meta name="description" content="Leaderboard for a comparative reproducibility study of Jev and leading reranking models on TREC DL, BEIR, and BRIGHT.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="intro">
+      <p class="kicker">Leaderboard</p>
+      <h1>A Comparative Reproducibility Study of Jev and Leading Reranking Models</h1>
+      <p class="lede">Every method reranks the same BM25 top-100 on 14 datasets from TREC DL, BEIR, and BRIGHT. Jev, a non-generative decision model, is run in three modes — Noul, Score, and Choice — and compared with neural rerankers and with GPT-4o-mini given the same instructions. Under review.</p>
+    </header>
+
+    <main>
+      <div class="toolbar">
+        <div class="tabs" id="tabs" role="tablist" aria-label="Result views"></div>
+        <div class="metrics" id="metrics" role="group" aria-label="Metric"></div>
+      </div>
+      <p class="metric-help" id="metric-help"></p>
+      <div class="scroller" id="scroller">
+        <table id="board">
+          <caption class="sr-only" id="caption"></caption>
+        </table>
+      </div>
+      <p class="legend" id="legend"></p>
+      <p class="download"><a href="results.csv">Download the full results (CSV)</a></p>
+    </main>
+
+    <footer class="credits">
+      <p class="authors">Alireza Mirrokni<sup>1</sup>, Sajad Ebrahimi<sup>1</sup>, Negar Arabzadeh<sup>2</sup>, Ebrahim Bagheri<sup>1</sup></p>
+      <p class="affil"><sup>1</sup>University of Toronto<br><sup>2</sup>University of California, Berkeley</p>
+      <p class="code"><a href="https://github.com/alirezamirrokni/JevRerank">github.com/alirezamirrokni/JevRerank</a></p>
+    </footer>
+  </div>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
