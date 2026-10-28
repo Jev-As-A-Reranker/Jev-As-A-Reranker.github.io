@@ -45,7 +45,7 @@ const METRICS = [
     tab: "efficiency",
     better: "low",
     digits: 2,
-    help: "Estimated US dollars per 1,000 queries. Local models are 0. Lower is better.",
+    help: "Estimated US dollars per 1,000 queries. Lower is better. Locally hosted models are marked local, because they have no API charge.",
   },
   {
     id: "Output tokens / query",
@@ -53,13 +53,12 @@ const METRICS = [
     tab: "efficiency",
     better: "low",
     digits: null,
-    help: "Output tokens per query. Lower means less generated text.",
+    help: "Output tokens per query. Lower means less generated text. An em dash means the method does not generate text.",
   },
 ];
 
 const TABS = [
   { id: "comparison", label: "Comparison" },
-  { id: "choice", label: "Choice" },
   { id: "efficiency", label: "Efficiency" },
 ];
 
@@ -94,24 +93,49 @@ function activeMetrics() {
 }
 
 function activeMethods() {
-  if (state.tab === "choice") return window.BOARD.methods.filter((method) => method.choice);
   return window.BOARD.methods;
+}
+
+function isPlaceholderZero(value) {
+  return value === 0 && (state.metric === "USD / 1k queries (est.)" || state.metric === "Output tokens / query");
+}
+
+function placeholderLabel() {
+  if (state.metric === "USD / 1k queries (est.)") return "local";
+  if (state.metric === "Output tokens / query") return "—";
+  return "";
+}
+
+function placeholderTitle() {
+  if (state.metric === "USD / 1k queries (est.)") {
+    return "Locally hosted. There is no API charge, so this is not a cost of zero.";
+  }
+  if (state.metric === "Output tokens / query") {
+    return "This method does not generate text, so there are no output tokens to count.";
+  }
+  return "";
 }
 
 function cellValue(method, datasetId) {
   const cell = method.cells[datasetId];
   if (!cell || cell.status !== "ok") return null;
   const value = Number(cell[state.metric]);
-  return Number.isFinite(value) ? value : null;
+  if (!Number.isFinite(value) || isPlaceholderZero(value)) return null;
+  return value;
 }
 
 function averageOf(method) {
-  const values = window.BOARD.datasets
-    .map((dataset) => cellValue(method, dataset.id))
-    .filter((value) => value !== null);
-  if (!values.length) return { mean: null, n: 0 };
+  let blanks = 0;
+  const values = [];
+  window.BOARD.datasets.forEach((dataset) => {
+    const value = cellValue(method, dataset.id);
+    if (value !== null) values.push(value);
+    const cell = method.cells[dataset.id];
+    if (cell && cell.status === "ok" && isPlaceholderZero(Number(cell[state.metric]))) blanks += 1;
+  });
+  if (!values.length) return { mean: null, n: 0, blank: blanks > 0 };
   const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
-  return { mean, n: values.length };
+  return { mean, n: values.length, blank: false };
 }
 
 function formatValue(value) {
@@ -250,7 +274,6 @@ function renderTable() {
   const metric = metricById(state.metric);
   const datasets = window.BOARD.datasets;
   const rows = rankedMethods();
-  const showBatch = state.tab === "efficiency";
   caption.textContent = `${TABS.find((tab) => tab.id === state.tab).label}, ${metric.label}`;
 
   const avgWinners = bestSet(rows.map((row) => (row.complete ? row.avg.mean : null)));
@@ -290,17 +313,6 @@ function renderTable() {
   if (state.sortKey === "avg") avgTh.setAttribute("aria-sort", state.sortDir === "asc" ? "ascending" : "descending");
   avgTh.append(headerButton("Avg", "avg"));
   nameRow.append(avgTh);
-
-  if (showBatch) {
-    const batchGap = document.createElement("th");
-    batchGap.className = "sticky col-batch";
-    groupRow.append(batchGap);
-    const batchTh = document.createElement("th");
-    batchTh.className = "sticky col-batch";
-    batchTh.scope = "col";
-    batchTh.textContent = "Batch";
-    nameRow.append(batchTh);
-  }
 
   const families = [];
   datasets.forEach((dataset) => {
@@ -357,25 +369,27 @@ function renderTable() {
         coverage.textContent = `${row.avg.n}/${datasets.length}`;
         avg.append(coverage);
       }
+    } else if (row.avg.blank) {
+      avg.textContent = placeholderLabel();
+      avg.classList.add("absent");
+      avg.title = placeholderTitle();
     }
     tr.append(avg);
-
-    if (showBatch) {
-      const batch = document.createElement("td");
-      batch.className = "sticky col-batch";
-      batch.textContent = row.method.batch === "N/A" ? "—" : row.method.batch;
-      tr.append(batch);
-    }
 
     datasets.forEach((dataset, datasetIndex) => {
       const td = document.createElement("td");
       td.className = FAMILY_CLASS[dataset.family];
       const cell = row.method.cells[dataset.id];
       const value = cellValue(row.method, dataset.id);
+      const raw = cell && cell.status === "ok" ? Number(cell[state.metric]) : null;
       if (value !== null) {
         td.textContent = formatValue(value);
         td.title = cell[state.metric];
         if (columnWinners[datasetIndex].has(index)) td.classList.add("best");
+      } else if (isPlaceholderZero(raw)) {
+        td.textContent = placeholderLabel();
+        td.classList.add("absent");
+        td.title = placeholderTitle();
       } else if (cell && cell.status === "limit") {
         td.textContent = "limit";
         td.classList.add("limit");
@@ -394,22 +408,21 @@ function renderTable() {
 }
 
 function renderLegend() {
+  const mark = document.body.dataset.mark || "Gold";
   const partial = "Methods that missed at least one dataset are listed after complete runs when the table is sorted by average, and the average is marked with how many datasets it covers.";
-  if (state.tab === "choice") {
-    legendEl.textContent = `Gold is the best value in that column. limit is a Choice request the context window rejected. An em dash is a fallback that was not run, because the native request already fit. ${partial}`;
-    return;
-  }
   if (state.tab === "efficiency") {
-    legendEl.textContent = `Gold is the best value in that column. Latency is the median per query. Cost is estimated from token counts and list prices. Batch is how many passages were scored together. ${partial}`;
+    legendEl.textContent = `${mark} is the best value in that column. Latency is the median per query. Cost is estimated from token counts and list prices. local means the model is hosted on our own hardware, so there is no API charge to report. An em dash for tokens means the method does not generate text. Neither is shown as zero, because zero would read as a measured cost or a measured token count. ${partial}`;
     return;
   }
-  legendEl.textContent = `Gold is the best value on each dataset. limit is a run the context window rejected. An em dash is a configuration that was not run. ${partial}`;
+  legendEl.textContent = `${mark} is the best value on each dataset. Choice includes the native, truncate, and tournament runs. limit is a request the context window rejected. An em dash is a fallback that was not run, because the native request already fit. ${partial}`;
 }
 
 function render() {
   renderControls();
   renderTable();
   renderLegend();
+  document.body.dataset.better = metricById(state.metric).better;
+  if (typeof window.decorateBoard === "function") window.decorateBoard(table);
 }
 
 render();

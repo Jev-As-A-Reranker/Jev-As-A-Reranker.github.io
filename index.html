@@ -3,19 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jev as a Reranker — Leaderboard</title>
-  <meta name="description" content="Leaderboard for a comparative reproducibility study of Jev and leading reranking models on TREC DL, BEIR, and BRIGHT.">
+  <title>A Comparative Reproducibility Study of Jev and Leading Reranking Models</title>
+  <meta name="description" content="Results for a comparative reproducibility study of Jev and leading reranking models on TREC DL, BEIR, and BRIGHT.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,650&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="wrap">
     <header class="intro">
-      <p class="kicker">Leaderboard</p>
       <h1>A Comparative Reproducibility Study of Jev and Leading Reranking Models</h1>
-      <p class="lede">Every method reranks the same BM25 top-100 on 14 datasets from TREC DL, BEIR, and BRIGHT. Jev, a non-generative decision model, is run in three modes — Noul, Score, and Choice — and compared with neural rerankers and with GPT-4o-mini given the same instructions. Under review.</p>
+      <p class="lede">Every method reranks the same BM25 top-100 on 14 datasets from TREC DL, BEIR, and BRIGHT. Jev, a non-generative decision model, is run in three modes (Noul, Score, and Choice) and compared with neural rerankers and with GPT-4o-mini given the same instructions.</p>
     </header>
 
     <main>
@@ -31,11 +30,26 @@
       </div>
       <p class="legend" id="legend"></p>
       <p class="download"><a href="results.csv">Download the full results (CSV)</a></p>
+      <div class="soon">
+        <p class="soon-label">Coming soon</p>
+        <ul>
+          <li>Jev 1.14 <span class="who">TypeSafe</span></li>
+          <li>Clef <span class="who">Cloudflare</span></li>
+          <li>Clef-Flash <span class="who">Cloudflare</span></li>
+          <li>Clef-Omni <span class="who">Cloudflare</span></li>
+          <li>Laya <span class="who">Convai Innovations</span></li>
+          <li>d1 <span class="who">Liquid AI</span></li>
+          <li>d1-3B <span class="who">Liquid AI</span></li>
+          <li>Microsoft-Decision-1 <span class="who">Microsoft</span></li>
+          <li>OpenAI Decisions <span class="who">OpenAI</span></li>
+          <li>GLiNER2.5-Decide <span class="who">Fastino</span></li>
+        </ul>
+      </div>
     </main>
 
     <footer class="credits">
-      <p class="authors">Alireza Mirrokni<sup>1</sup>, Sajad Ebrahimi<sup>1</sup>, Negar Arabzadeh<sup>2</sup>, Ebrahim Bagheri<sup>1</sup></p>
-      <p class="affil"><sup>1</sup>University of Toronto<br><sup>2</sup>University of California, Berkeley</p>
+      <p class="authors">Sajad Ebrahimi<sup>1</sup>, Alireza Mirrokni<sup>1</sup>, Negar Arabzadeh<sup>2</sup>, Ebrahim Bagheri<sup>1</sup></p>
+      <p class="affil"><sup>1</sup>University of Toronto <span class="affil-sep">·</span> <sup>2</sup>University of California, Berkeley</p>
       <p class="code"><a href="https://github.com/alirezamirrokni/JevRerank">github.com/alirezamirrokni/JevRerank</a></p>
     </footer>
   </div>

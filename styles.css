@@ -1,18 +1,28 @@
 :root {
-  --bg: #f3f0e8;
-  --paper: #fffdf9;
-  --ink: #1c1916;
-  --muted: #6f675e;
-  --line: #e3dcd0;
-  --line-strong: #d3c9b8;
-  --teal: #0f3d3e;
-  --gold: #f3e3b0;
-  --gold-strong: #e6cf86;
-  --hover: #f4efe6;
-  --header: #f6f2ea;
-  --shadow: 0 12px 40px rgba(28, 25, 22, 0.05);
-  --sans: "IBM Plex Sans", "Segoe UI", sans-serif;
-  --serif: "Newsreader", Georgia, serif;
+  --bg: #f4ebe3;
+  --paper: #fff8f3;
+  --ink: #2c211c;
+  --muted: #7a655b;
+  --line: #eadcd2;
+  --line-strong: #d8c2b4;
+  --teal: #8d3f2c;
+  --gold: #f6d3b4;
+  --gold-strong: #efbe96;
+  --hover: #f8eee6;
+  --header: #fbf1e8;
+  --lede: #4a382f;
+  --th: #5c463c;
+  --on-accent: #fff6f0;
+  --dl: #f8ece4;
+  --beir: #f3e6dc;
+  --bright: #f7efe4;
+  --dl-hover: #f0dfd3;
+  --beir-hover: #ead8cb;
+  --bright-hover: #efe4d4;
+  --faint: #b19688;
+  --shadow: 0 12px 40px rgba(44, 33, 28, 0.05);
+  --sans: "Nunito Sans", "Segoe UI", sans-serif;
+  --serif: "Nunito Sans", "Segoe UI", sans-serif;
   --rank: 3.25rem;
   --method: 15.5rem;
   --avg: 5.25rem;
@@ -36,32 +46,54 @@ body {
   padding: 3rem 1.5rem 4.5rem;
 }
 
-.intro { max-width: 46rem; }
-
-.kicker {
-  margin: 0 0 0.7rem;
-  color: var(--teal);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
+.intro { width: 100%; }
 
 h1 {
   margin: 0;
+  max-width: none;
   font-family: var(--serif);
-  font-size: clamp(2.1rem, 4vw, 3.35rem);
-  font-weight: 550;
-  letter-spacing: -0.025em;
-  line-height: 1.12;
+  font-size: clamp(1.85rem, 2.4vw + 1rem, 3.15rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .lede {
   margin: 1.1rem 0 0;
-  color: #3c3832;
-  font-size: 1.05rem;
+  max-width: none;
+  color: var(--lede);
+  font-size: clamp(1rem, 0.4vw + 0.95rem, 1.125rem);
   line-height: 1.55;
 }
+
+.soon { margin-top: 2rem; }
+
+.soon-label {
+  margin: 0 0 0.55rem;
+  color: var(--teal);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.soon ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr));
+  gap: 0.35rem 1.25rem;
+}
+
+.soon li { font-size: 0.95rem; }
+
+.soon .who {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.soon .who::before { content: "· "; }
 
 .toolbar {
   display: flex;
@@ -92,7 +124,7 @@ h1 {
 
 .tabs button[aria-selected="true"] {
   background: var(--teal);
-  color: #f7f4ee;
+  color: var(--on-accent);
 }
 
 .metrics button[aria-pressed="true"] {
@@ -103,7 +135,7 @@ h1 {
 }
 
 .tabs button:hover, .metrics button:hover { color: var(--ink); }
-.tabs button[aria-selected="true"]:hover { color: #f7f4ee; }
+.tabs button[aria-selected="true"]:hover { color: var(--on-accent); }
 
 .metric-help {
   min-height: 1.4rem;
@@ -151,7 +183,7 @@ th, td {
 
 th {
   font-weight: 500;
-  color: #4e483f;
+  color: var(--th);
 }
 
 thead th {
@@ -176,13 +208,13 @@ thead th {
 
 .group-row th.family-dl,
 .name-row th.family-dl,
-td.family-dl { background: #f4f1ea; }
+td.family-dl { background: var(--dl); }
 .group-row th.family-beir,
 .name-row th.family-beir,
-td.family-beir { background: #eef3f0; }
+td.family-beir { background: var(--beir); }
 .group-row th.family-bright,
 .name-row th.family-bright,
-td.family-bright { background: #f6f1eb; }
+td.family-bright { background: var(--bright); }
 
 .sticky {
   position: sticky;
@@ -238,7 +270,7 @@ td.best {
 }
 
 td.limit, td.absent {
-  color: #a39b90;
+  color: var(--faint);
   font-weight: 500;
   text-align: center;
 }
@@ -255,9 +287,9 @@ td.limit {
 }
 
 tbody tr:hover td { background: var(--hover); }
-tbody tr:hover td.family-dl { background: #ebe6dc; }
-tbody tr:hover td.family-beir { background: #e3ebe6; }
-tbody tr:hover td.family-bright { background: #eee6dc; }
+tbody tr:hover td.family-dl { background: var(--dl-hover); }
+tbody tr:hover td.family-beir { background: var(--beir-hover); }
+tbody tr:hover td.family-bright { background: var(--bright-hover); }
 tbody tr:hover td.best,
 tbody tr:hover td.family-dl.best,
 tbody tr:hover td.family-beir.best,
@@ -267,7 +299,7 @@ tbody tr:hover td.family-bright.best { background: var(--gold-strong); }
   margin: 0.85rem 0 0;
   color: var(--muted);
   font-size: 0.86rem;
-  max-width: 52rem;
+  max-width: none;
 }
 
 .download a, .code a {
@@ -279,12 +311,13 @@ tbody tr:hover td.family-bright.best { background: var(--gold-strong); }
   margin-top: 2.75rem;
   padding-top: 1.35rem;
   border-top: 1px solid var(--line-strong);
-  max-width: 42rem;
+  max-width: none;
 }
 
 .authors {
   margin: 0;
-  font-family: var(--serif);
+  font-family: var(--sans);
+  font-weight: 650;
   font-size: 1.25rem;
   line-height: 1.4;
 }
@@ -300,6 +333,8 @@ tbody tr:hover td.family-bright.best { background: var(--gold-strong); }
   font-size: 0.92rem;
   line-height: 1.45;
 }
+
+.affil-sep { margin: 0 0.15rem; }
 
 .code { margin: 0.9rem 0 0; font-size: 0.95rem; }
 
